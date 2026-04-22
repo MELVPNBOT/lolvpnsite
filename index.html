@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>VPN Access | Verification</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        body { 
+            background: #0b0b0b; 
+            color: #00d4ff; 
+            font-family: 'Arial', sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: #161616;
+            padding: 50px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+        h1 { margin-bottom: 30px; letter-spacing: 2px; }
+        .g-recaptcha { margin-bottom: 20px; }
+        
+        #main-btn {
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none; /* Кнопка скрыта, пока не пройдена капча */
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        #main-btn:hover { background: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>ПРОВЕРКА БЕЗОПАСНОСТИ</h1>
+        
+        <div class="g-recaptcha" 
+             data-sitekey="6Lf-0cQsAAAAANJW7cq3Vez0drU63zbRziSxZR1E" 
+             data-callback="onSuccess"></div>
+
+        <a href="main.html" id="main-btn">ПЕРЕЙТИ К VPN</a>
+    </div>
+
+    <script>
+        // Эта функция сработает автоматически, когда капча будет пройдена
+        function onSuccess(response) {
+            if (response.length !== 0) {
+                // Показываем кнопку перехода
+                document.getElementById('main-btn').style.display = 'inline-block';
+                
+                // Если хочешь, чтобы ПЕРЕКИДЫВАЛО СРАЗУ (без клика), убери коммент ниже:
+                // window.location.href = "main.html"; 
+            }
+        }
+    </script>
+</body>
+</html>
