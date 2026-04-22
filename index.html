@@ -2,69 +2,117 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>VPN Access | Verification</title>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOLVPN | Приватная подписка</title>
     <style>
-        body { 
-            background: #0b0b0b; 
-            color: #00d4ff; 
-            font-family: 'Arial', sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
+        body {
             margin: 0;
+            padding: 0;
+            background: #050505;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
-        .container {
+
+        /* Шапка сайта */
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+        }
+
+        /* Аватарка в левом верхнем углу */
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #00d4ff;
+            object-fit: cover;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Центральный контент */
+        .main-content {
+            margin-top: 15vh;
             text-align: center;
-            background: #161616;
-            padding: 50px;
-            border-radius: 20px;
-            border: 1px solid #333;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            max-width: 600px;
+            padding: 20px;
         }
-        h1 { margin-bottom: 30px; letter-spacing: 2px; }
-        .g-recaptcha { margin-bottom: 20px; }
-        
-        #main-btn {
-            background: #00d4ff;
+
+        .title {
+            font-size: 48px;
+            font-weight: 900;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .description {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 40px;
+        }
+
+        /* Кнопка связи в ТГ */
+        .tg-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d4ff 0%, #007bff 100%);
             color: #000;
-            border: none;
-            padding: 15px 40px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            display: none; /* Кнопка скрыта, пока не пройдена капча */
             text-decoration: none;
-            transition: 0.3s;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
         }
-        #main-btn:hover { background: #fff; }
+
+        .tg-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
+            background: #fff;
+        }
+
+        .tg-username {
+            display: block;
+            margin-top: 15px;
+            color: #00d4ff;
+            font-size: 14px;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>ПРОВЕРКА БЕЗОПАСНОСТИ</h1>
-        
-        <div class="g-recaptcha" 
-             data-sitekey="6Lf-0cQsAAAAANJW7cq3Vez0drU63zbRziSxZR1E" 
-             data-callback="onSuccess"></div>
+    <header>
+        <img src="https://raw.githubusercontent.com/MELVPNBOT/lolvpnsite/main/lolvpnava.png" alt="Avatar" class="avatar">
+    </header>
 
-        <a href="main.html" id="main-btn">ПЕРЕЙТИ К VPN</a>
+    <div class="main-content">
+        <div class="title">ЛОЛВПН</div>
+        
+        <p class="description">
+            Скоростной доступ, обход блокировок и полная анонимность. 
+            Ваш интернет — ваши правила.
+        </p>
+
+        <a href="https://t.me/sanek37r" class="tg-link">
+            ПОЛУЧИТЬ ПРИВАТНУЮ ПОДПИСКУ
+        </a>
+        
+        <span class="tg-username">написать в Telegram: @sanek37r</span>
     </div>
 
-    <script>
-        // Эта функция сработает автоматически, когда капча будет пройдена
-        function onSuccess(response) {
-            if (response.length !== 0) {
-                // Показываем кнопку перехода
-                document.getElementById('main-btn').style.display = 'inline-block';
-                
-                // Если хочешь, чтобы ПЕРЕКИДЫВАЛО СРАЗУ (без клика), убери коммент ниже:
-                // window.location.href = "main.html"; 
-            }
-        }
-    </script>
 </body>
 </html>
