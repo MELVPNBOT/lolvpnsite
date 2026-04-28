@@ -1,153 +1,6 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LolVPN | Активация</title>
-    <style>
-        :root {
-            --primary: #007bff;
-            --bg: #0f0f12;
-            --card: #1a1a20;
-            --text: #ffffff;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Аватарка в углу */
-        .header-logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-logo img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid var(--primary);
-            object-fit: cover;
-        }
-
-        /* Основной контейнер */
-        .container {
-            background: var(--card);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-            border: 1px solid #333;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #007bff, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .info-text {
-            font-size: 0.9rem;
-            color: #aaa;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        /* Инпуты */
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #444;
-            background: #25252d;
-            color: white;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus {
-            border-color: var(--primary);
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            border: none;
-            border-radius: 8px;
-            background: var(--primary);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: #0056b3;
-            transform: translateY(-2px);
-        }
-
-        button:disabled {
-            background: #444;
-            cursor: not-allowed;
-        }
-
-        #captcha-box {
-            background: #25252d;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="header-logo">
-        <img src="https://raw.githubusercontent.com/MELVPNBOT/lolvpnsite/main/lolvpnava.png" alt="Logo">
-        <span>LolVPN Premium</span>
-    </div>
-
-    <div class="container">
-        <h1>ЛолВПН</h1>
-        <p class="info-text">
-            Наш VPN обеспечивает максимальную анонимность и обход любых блокировок. 
-            Используем протоколы VLESS/Xray для стабильной работы даже в сложных сетях. 
-            Никаких логов, только чистая скорость!
-        </p>
-
-        <div id="captcha-box">
-            Решите: <span id="question"></span>
-        </div>
-        <input type="number" id="captcha-input" placeholder="Ответ на капчу">
-        
-        <input type="text" id="user-code" placeholder="Введите ваш код доступа">
-        
-        <button id="main-btn" onclick="handleVerify()">Активировать доступ</button>
-    </div>
-
-    <script>
-        const CONFIG = {
+const CONFIG = {
             owner: 'MELVPNBOT',
-            repo: 'lolvpnsite', // Только название репо
+            repo: 'lolvpnsite', 
             path: 'code.json',
             token: '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',
             rawUrl: 'https://raw.githubusercontent.com/MELVPNBOT/lolvpnsite/refs/heads/main/code.json'
@@ -177,31 +30,31 @@
             btn.innerText = "Проверка кода...";
 
             try {
-                // 1. Быстрая проверка через RAW
+                // 1. Проверка через RAW (кеш-брейкер добавлен для актуальности данных)
                 const rawRes = await fetch(CONFIG.rawUrl + '?t=' + Date.now());
                 const codes = await rawRes.json();
                 
                 const index = codes.findIndex(c => c.code === userCode);
 
                 if (index === -1) {
-                    alert("Такого кода не существует!");
+                    alert("Такого кода не существует или он был удален!");
                 } else {
-                    btn.innerText = "Списание активации...";
+                    btn.innerText = "Обновление базы...";
                     
-                    // 2. Получаем SHA файла через API для обновления
+                    // 2. Получаем актуальный SHA через API
                     const apiLookup = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`, {
                         headers: { 'Authorization': `token ${CONFIG.token}` }
                     });
                     const fileData = await apiLookup.json();
 
-                    // Модифицируем данные
+                    // Модифицируем массив кодов
                     if (codes[index].activations > 1) {
                         codes[index].activations--;
                     } else {
                         codes.splice(index, 1);
                     }
 
-                    // 3. Сохраняем изменения
+                    // 3. Пушим изменения в репозиторий
                     const updateRes = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`, {
                         method: 'PUT',
                         headers: {
@@ -209,20 +62,22 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            message: "Code activation by site",
+                            message: `Code ${userCode} activated via web`,
                             content: btoa(JSON.stringify(codes, null, 2)),
                             sha: fileData.sha
                         })
                     });
 
                     if (updateRes.ok) {
-                        alert("Код активирован! Добро пожаловать.");
-                        window.location.href = 'index.html';
+                        // УСПЕХ: Переход на твою саб-ссылку
+                        window.location.href = 'https://lolvpnsub.vercel.app/';
                         return;
+                    } else {
+                        alert("Ошибка записи в GitHub. Проверьте права токена.");
                     }
                 }
             } catch (err) {
-                alert("Ошибка доступа. Проверьте токен или интернет.");
+                alert("Техническая ошибка. Возможно, токен недействителен.");
                 console.error(err);
             }
 
@@ -230,6 +85,3 @@
             btn.innerText = "Активировать доступ";
             generateCaptcha();
         }
-    </script>
-</body>
-</html>
