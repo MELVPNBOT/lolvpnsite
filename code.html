@@ -1,60 +1,277 @@
-const CONFIG = {
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LolVPN | Activation</title>
+    <style>
+        :root {
+            --primary: #007bff;
+            --primary-hover: #0056b3;
+            --bg: #0f0f12;
+            --card: #1a1a20;
+            --text: #ffffff;
+            --input-bg: #25252d;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Аватарка в верхнем левом углу */
+        .header-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(26, 26, 32, 0.8);
+            padding: 8px 15px;
+            border-radius: 50px;
+            border: 1px solid #333;
+            backdrop-filter: blur(5px);
+        }
+
+        .header-logo img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            object-fit: cover;
+        }
+
+        .header-logo span {
+            font-weight: bold;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Основная карточка */
+        .container {
+            background: var(--card);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            text-align: center;
+            width: 90%;
+            max-width: 420px;
+            border: 1px solid #2e2e38;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin: 0 0 15px 0;
+            background: linear-gradient(45deg, #007bff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .info-text {
+            font-size: 0.95rem;
+            color: #b0b0b8;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* Блок капчи и ввода */
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-left: 5px;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        #captcha-box {
+            background: var(--input-bg);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: 1px dashed var(--primary);
+            color: var(--primary);
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #3e3e4a;
+            background: var(--input-bg);
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            margin-top: 25px;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #444;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-logo">
+        <img src="https://raw.githubusercontent.com/MELVPNBOT/lolvpnsite/main/lolvpnava.png" alt="Logo">
+        <span>LolVPN Premium</span>
+    </div>
+
+    <div class="container">
+        <h1>ЛолВПН</h1>
+        <p class="info-text">
+            Приватный доступ к высокоскоростным узлам. <br>
+            VLESS + Reality • Без лимитов • Полная анонимность.
+        </p>
+
+        <div id="captcha-box">
+            Решите пример: <span id="question"></span>
+        </div>
+
+        <div class="input-group">
+            <input type="number" id="captcha-input" placeholder="Ответ на пример">
+        </div>
+        
+        <div class="input-group">
+            <input type="text" id="user-code" placeholder="Код активации (XXXX-XXXX)">
+        </div>
+        
+        <button id="main-btn" onclick="handleVerify()">Активировать доступ</button>
+        
+        <p class="footer-note">После активации вы будете перенаправлены на страницу подписки.</p>
+    </div>
+
+    <script>
+        const CONFIG = {
             owner: 'MELVPNBOT',
-            repo: 'lolvpnsite', 
+            repo: 'lolvpnsite',
             path: 'code.json',
             token: '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',
-            rawUrl: 'https://raw.githubusercontent.com/MELVPNBOT/lolvpnsite/refs/heads/main/code.json'
+            rawUrl: 'https://raw.githubusercontent.com/MELVPNBOT/lolvpnsite/refs/heads/main/code.json',
+            redirectUrl: 'https://lolvpnsub.vercel.app/'
         };
 
         let captchaAnswer;
+
+        // Генерация капчи
         function generateCaptcha() {
             const a = Math.floor(Math.random() * 9) + 1;
             const b = Math.floor(Math.random() * 9) + 1;
             captchaAnswer = a + b;
             document.getElementById('question').innerText = `${a} + ${b}`;
+            document.getElementById('captcha-input').value = '';
         }
+
         generateCaptcha();
 
         async function handleVerify() {
             const userCaptcha = document.getElementById('captcha-input').value;
-            const userCode = document.getElementById('user-code').value;
+            const userCode = document.getElementById('user-code').value.trim();
             const btn = document.getElementById('main-btn');
 
+            if (!userCaptcha || !userCode) {
+                alert("Заполните все поля!");
+                return;
+            }
+
             if (parseInt(userCaptcha) !== captchaAnswer) {
-                alert("Капча неверна!");
+                alert("Капча решена неверно!");
                 generateCaptcha();
                 return;
             }
 
             btn.disabled = true;
-            btn.innerText = "Проверка кода...";
+            btn.innerText = "Авторизация...";
 
             try {
-                // 1. Проверка через RAW (кеш-брейкер добавлен для актуальности данных)
-                const rawRes = await fetch(CONFIG.rawUrl + '?t=' + Date.now());
+                // 1. Проверка через RAW ссылку (для скорости)
+                const rawRes = await fetch(`${CONFIG.rawUrl}?t=${Date.now()}`);
                 const codes = await rawRes.json();
                 
                 const index = codes.findIndex(c => c.code === userCode);
 
                 if (index === -1) {
-                    alert("Такого кода не существует или он был удален!");
+                    alert("Ошибка: Неверный код или активации закончились.");
                 } else {
-                    btn.innerText = "Обновление базы...";
+                    btn.innerText = "Применение кода...";
                     
-                    // 2. Получаем актуальный SHA через API
+                    // 2. Получаем SHA файла через API для записи
                     const apiLookup = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`, {
                         headers: { 'Authorization': `token ${CONFIG.token}` }
                     });
+                    
+                    if (!apiLookup.ok) throw new Error("API Error");
                     const fileData = await apiLookup.json();
 
-                    // Модифицируем массив кодов
+                    // Логика изменения активаций
                     if (codes[index].activations > 1) {
                         codes[index].activations--;
                     } else {
                         codes.splice(index, 1);
                     }
 
-                    // 3. Пушим изменения в репозиторий
+                    // 3. Отправляем обновленный JSON в репозиторий
                     const updateRes = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`, {
                         method: 'PUT',
                         headers: {
@@ -62,26 +279,29 @@ const CONFIG = {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            message: `Code ${userCode} activated via web`,
+                            message: `User activated code: ${userCode}`,
                             content: btoa(JSON.stringify(codes, null, 2)),
                             sha: fileData.sha
                         })
                     });
 
                     if (updateRes.ok) {
-                        // УСПЕХ: Переход на твою саб-ссылку
-                        window.location.href = 'https://lolvpnsub.vercel.app/';
+                        btn.innerText = "Успешно! Переходим...";
+                        window.location.href = CONFIG.redirectUrl;
                         return;
                     } else {
-                        alert("Ошибка записи в GitHub. Проверьте права токена.");
+                        alert("Сервер GitHub отклонил запрос. Проверьте токен.");
                     }
                 }
             } catch (err) {
-                alert("Техническая ошибка. Возможно, токен недействителен.");
                 console.error(err);
+                alert("Ошибка подключения к серверу. Попробуйте позже.");
             }
 
             btn.disabled = false;
             btn.innerText = "Активировать доступ";
             generateCaptcha();
         }
+    </script>
+</body>
+</html>
