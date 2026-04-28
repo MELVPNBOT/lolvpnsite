@@ -1,4 +1,5 @@
 [
   { "code": "TEST", "activations": 1 },
-  { "code": "GIFT-777", "activations": 3 }
+  { "code": "Testing", "activations": 1 },
+  { "code": "GIFT-777", "activations": 1 }
 ]
