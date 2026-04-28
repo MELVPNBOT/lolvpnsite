@@ -1,35 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Проверка кода</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LolVPN | Активация</title>
+    <style>
+        :root {
+            --primary: #007bff;
+            --bg: #0f0f12;
+            --card: #1a1a20;
+            --text: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Аватарка в углу */
+        .header-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            object-fit: cover;
+        }
+
+        /* Основной контейнер */
+        .container {
+            background: var(--card);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #007bff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info-text {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Инпуты */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #25252d;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #444;
+            cursor: not-allowed;
+        }
+
+        #captcha-box {
+            background: #25252d;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h2>Введите код доступа</h2>
-    
-    <div id="captcha-box">
-        <p>Решите пример: <span id="question"></span></p>
-        <input type="number" id="captcha-input" placeholder="Ответ">
+
+    <div class="header-logo">
+        <img src="https://raw.githubusercontent.com/MELVPNBOT/lolvpnsite/main/lolvpnava.png" alt="Logo">
+        <span>LolVPN Premium</span>
     </div>
 
-    <hr>
-    
-    <input type="text" id="user-code" placeholder="Ваш код">
-    <button onclick="handleVerify()">Активировать</button>
+    <div class="container">
+        <h1>ЛолВПН</h1>
+        <p class="info-text">
+            Наш VPN обеспечивает максимальную анонимность и обход любых блокировок. 
+            Используем протоколы VLESS/Xray для стабильной работы даже в сложных сетях. 
+            Никаких логов, только чистая скорость!
+        </p>
+
+        <div id="captcha-box">
+            Решите: <span id="question"></span>
+        </div>
+        <input type="number" id="captcha-input" placeholder="Ответ на капчу">
+        
+        <input type="text" id="user-code" placeholder="Введите ваш код доступа">
+        
+        <button id="main-btn" onclick="handleVerify()">Активировать доступ</button>
+    </div>
 
     <script>
-        // Конфиг (Заполни свои данные)
         const CONFIG = {
             owner: 'MELVPNBOT',
-            repo: 'MELVPNBOT/lolvpnsite',
+            repo: 'lolvpnsite', // Только название репо
             path: 'code.json',
-            token: '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' // ВНИМАНИЕ: Виден в коде!
+            token: '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',
+            rawUrl: 'https://raw.githubusercontent.com/MELVPNBOT/lolvpnsite/refs/heads/main/code.json'
         };
 
-        // Генерация капчи
         let captchaAnswer;
         function generateCaptcha() {
-            const a = Math.floor(Math.random() * 10) + 1;
-            const b = Math.floor(Math.random() * 10) + 1;
+            const a = Math.floor(Math.random() * 9) + 1;
+            const b = Math.floor(Math.random() * 9) + 1;
             captchaAnswer = a + b;
             document.getElementById('question').innerText = `${a} + ${b}`;
         }
@@ -38,67 +165,70 @@
         async function handleVerify() {
             const userCaptcha = document.getElementById('captcha-input').value;
             const userCode = document.getElementById('user-code').value;
+            const btn = document.getElementById('main-btn');
 
             if (parseInt(userCaptcha) !== captchaAnswer) {
-                alert("Капча решена неверно!");
+                alert("Капча неверна!");
                 generateCaptcha();
                 return;
             }
 
-            // Блокируем кнопку на время запроса
-            const btn = document.querySelector('button');
             btn.disabled = true;
-            btn.innerText = "Проверка...";
+            btn.innerText = "Проверка кода...";
 
             try {
-                // 1. Получаем текущий файл
-                const url = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`;
-                const res = await fetch(url, {
-                    headers: { 'Authorization': `token ${CONFIG.token}` }
-                });
-                const fileData = await res.json();
-                const codes = JSON.parse(atob(fileData.content));
-
-                // 2. Ищем код
-                const index = codes.findIndex(item => item.code === userCode);
+                // 1. Быстрая проверка через RAW
+                const rawRes = await fetch(CONFIG.rawUrl + '?t=' + Date.now());
+                const codes = await rawRes.json();
+                
+                const index = codes.findIndex(c => c.code === userCode);
 
                 if (index === -1) {
-                    alert("Код не найден!");
+                    alert("Такого кода не существует!");
                 } else {
-                    // Изменяем данные
+                    btn.innerText = "Списание активации...";
+                    
+                    // 2. Получаем SHA файла через API для обновления
+                    const apiLookup = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`, {
+                        headers: { 'Authorization': `token ${CONFIG.token}` }
+                    });
+                    const fileData = await apiLookup.json();
+
+                    // Модифицируем данные
                     if (codes[index].activations > 1) {
                         codes[index].activations--;
                     } else {
                         codes.splice(index, 1);
                     }
 
-                    // 3. Сохраняем обратно
-                    const updateRes = await fetch(url, {
+                    // 3. Сохраняем изменения
+                    const updateRes = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`, {
                         method: 'PUT',
                         headers: {
                             'Authorization': `token ${CONFIG.token}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            message: "Code activation",
+                            message: "Code activation by site",
                             content: btoa(JSON.stringify(codes, null, 2)),
                             sha: fileData.sha
                         })
                     });
 
                     if (updateRes.ok) {
-                        alert("Успех! Переход на главную...");
+                        alert("Код активирован! Добро пожаловать.");
                         window.location.href = 'index.html';
                         return;
                     }
                 }
             } catch (err) {
+                alert("Ошибка доступа. Проверьте токен или интернет.");
                 console.error(err);
-                alert("Ошибка при связи с GitHub");
             }
 
             btn.disabled = false;
-            btn.innerText = "Активировать";
+            btn.innerText = "Активировать доступ";
+            generateCaptcha();
         }
     </script>
 </body>
